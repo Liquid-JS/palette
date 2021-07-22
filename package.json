@@ -1,6 +1,6 @@
 {
     "name": "@liquid-js/palette",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "description": "Get colour palette from an image",
     "private": true,
     "license": "GPL-3.0",
