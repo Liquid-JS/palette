@@ -7,12 +7,10 @@ import { lanczosResize } from './utils/resize'
 const MAX_PX = 128 * 128
 const MAX_BX = 32
 
-class Entry {
-    readonly volume: number
-    readonly size: number[]
-    readonly mid: number[]
+export class Entry {
     readonly entropy: number
     readonly weight: number
+    readonly size: number[]
 
     constructor(readonly data: Box) {
         const dmin = new Array<number>()
@@ -21,13 +19,12 @@ class Entry {
             dmin.push(data.reduce((t, v) => t < v.rgb[i] ? t : v.rgb[i], Number.MAX_VALUE))
             dmax.push(data.reduce((t, v) => t > v.rgb[i] ? t : v.rgb[i], Number.MIN_VALUE))
         }
-        this.weight = data.reduce((t, v) => t + v.w, 0)
         const dim = dmin.map((v, i) => dmax[i] - v)
-        const mid = dmin.map((v, i) => (dmax[i] + v) / 2)
-        this.volume = dim.reduce((t, v) => t * v, 1)
-        this.entropy = entropy(data)
         this.size = dim
-        this.mid = mid
+
+        const r = entropy(data)
+        this.weight = r.weight
+        this.entropy = r.entropy
     }
 }
 
@@ -66,18 +63,16 @@ export function quantize(img: CanvasImageSource) {
 
     const map: { [key: string]: number } = {}
     for (let i = 0; i < data.width * data.height; i++) {
-        const c = rgb2lab([data.data[i * 4], data.data[i * 4 + 1], data.data[i * 4 + 2]])
+        const rgb = Array.from(data.data.slice(i * 4, i * 4 + 3)) as ColorTupple
+        const c = rgb2lab(rgb)
         if (c[0] < 5 || c[0] > 95)
             continue
 
-        const color = [data.data[i * 4], data.data[i * 4 + 1], data.data[i * 4 + 2]] as ColorTupple
-        // const color = c
+        const key = rgb.map(p => Math.round(p * 100)).join('*')
+        if (!(key in map))
+            map[key] = 0
 
-        const k = color.map(p => Math.round(p * 100)).join('*')
-        if (!(k in map))
-            map[k] = 0
-
-        map[k] += data.data[i * 4 + 3] / 255
+        map[key] += data.data[i * 4 + 3] / 255
     }
 
     const box: Box = Object.entries(map).map(([k, w]) => ({
@@ -96,59 +91,36 @@ export function quantize(img: CanvasImageSource) {
             continue
         }
 
-        let i = 0
-        for (let j = 1; j < el.size.length; j++)
-            if (el.size[j] > el.size[i])
-                i = j
+        let maxDim = 0
+        for (let i = 1; i < el.size.length; i++)
+            if (el.size[i] > el.size[maxDim])
+                maxDim = i
 
-        const map: { [key: string]: number } = {}
-        el.data.forEach(p => {
-            const k = p.rgb[i].toFixed(2)
-            if (!(k in map))
-                map[k] = 0
-
-            map[k] += p.w
-        })
-
-        let w = 0
-        const bp = Object.entries(map)
-            .sort(([a], [b]) => parseFloat(a) - parseFloat(b))
-            .map(([k, v]) => {
-                const e = {
-                    k: parseFloat(k),
-                    w
-                }
-                w += v
-                return e
-            })
-
-        if (bp.length < 1) {
+        const ks = Array.from(new Set(el.data.map(p => p.rgb[maxDim].toFixed(2)))).map(parseFloat)
+        if (ks.length < 1) {
             boxes.push(el)
             continue
         }
 
-        const ent = bp.map(({ k }) => {
-            const e1 = Math.pow(entropy(el!.data.filter(v => v.rgb[i] < k)), 3)
-            const e2 = Math.pow(entropy(el!.data.filter(v => v.rgb[i] >= k)), 3)
-            if (e1 == 0 || e2 == 0)
-                return { k, e: Number.MAX_VALUE }
+        const elData = el.data
+        const ent = ks.map((k) => {
+            const e1 = new Entry(elData.filter(v => v.rgb[maxDim] < k))
+            const e2 = new Entry(elData.filter(v => v.rgb[maxDim] >= k))
+            if (e1.entropy == 0 || e2.entropy == 0)
+                return { k, e: Number.MAX_VALUE, e1, e2 }
             else
-                return { k, e: e1 + e2 }
+                return { k, e: Math.pow(e1.entropy, 3) + Math.pow(e2.entropy, 3), e1, e2 }
         })
 
-        // const mid = w / 2
         let min = ent[0]
         ent.forEach(e => {
             if (e.e < min.e)
                 min = e
         })
 
-        const p = min.k
-
-        // const p = el.mid[i]
-        const low = new Entry(el.data.filter(v => v.rgb[i] < p))
-        const high = new Entry(el.data.filter(v => v.rgb[i] >= p))
-        if (low?.data.length && high?.data.length) {
+        const low = min.e1
+        const high = min.e2
+        if (low.data.length && high.data.length) {
             queue.push(low)
             queue.push(high)
         } else {

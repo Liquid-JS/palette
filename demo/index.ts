@@ -1,7 +1,7 @@
 import { quantize } from '../src'
 import { rgb2str } from '../src/utils/color'
 import { mean } from '../src/utils/operations'
-import samplePath from './sample2.png'
+import samplePath from './logos.png'
 
 const img = new Image()
 img.addEventListener('load', () => {

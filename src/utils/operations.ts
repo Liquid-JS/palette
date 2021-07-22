@@ -5,11 +5,17 @@ export type Box = Array<{ rgb: ColorTupple, w: number }>
 export function entropy(box: Box) {
     const { m, w } = mean(box)
     if (w == 0)
-        return 0
+        return {
+            entropy: 0,
+            weight: 0
+        }
     const err = box.reduce((t, v) => {
         return t + euc2(m, v.rgb) * v.w
     }, 0) / w
-    return err
+    return {
+        entropy: err,
+        weight: w
+    }
 }
 
 export function euc2(a: ColorTupple, b: ColorTupple) {

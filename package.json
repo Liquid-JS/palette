@@ -12,15 +12,22 @@
         "lint:scripts": "tslint --fix --project tsconfig.webpack.json",
         "lint:md": "ts-node --project ./tsconfig.webpack.json --files ./scripts/lint-md.ts",
         "start": "cross-env TS_NODE_PROJECT=tsconfig.webpack.json webpack serve --mode development --config webpack.ts",
+        "build": "rimraf dist && rollup --config rollup.config.ts --configPlugin typescript",
         "postinstall": "husky install",
+        "prepublishOnly": "yarn build",
         "release": "standard-version"
     },
     "files": [
         "dist"
     ],
     "devDependencies": {
+        "@ampproject/rollup-plugin-closure-compiler": "^0.26.0",
         "@commitlint/cli": "^12.1.4",
         "@commitlint/config-conventional": "^12.1.4",
+        "@rollup/plugin-commonjs": "^19.0.1",
+        "@rollup/plugin-node-resolve": "^13.0.2",
+        "@rollup/plugin-typescript": "^8.2.3",
+        "@types/google-closure-compiler": "^0.0.19",
         "@types/skmeans": "^0.11.2",
         "cross-env": "^7.0.3",
         "file-loader": "^6.2.0",
@@ -28,6 +35,7 @@
         "husky": "^7.0.1",
         "rimraf": "^3.0.2",
         "rollup": "^2.53.3",
+        "rollup-plugin-terser": "^7.0.2",
         "standard-version": "^9.3.1",
         "ts-loader": "^9.2.3",
         "ts-node": "^10.1.0",
@@ -38,7 +46,6 @@
         "webpack-dev-server": "^3.11.2"
     },
     "dependencies": {
-        "skmeans": "^0.11.3",
         "tinyqueue": "^2.0.3"
     }
 }
