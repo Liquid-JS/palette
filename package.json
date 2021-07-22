@@ -1,0 +1,44 @@
+{
+    "name": "@liquid-js/palette",
+    "version": "0.0.0",
+    "description": "Get colour palette from an image",
+    "private": true,
+    "license": "GPL-3.0",
+    "main": "dist/index.js",
+    "scripts": {
+        "lint": "tslint --fix --project .",
+        "lint:sass": "sass-convert --indent 4 --to scss --from scss --recursive --in-place src/css/sass",
+        "lint:html": "js-beautify --type html -r -f ./site/**/*.html --config ./js-beautify.json",
+        "lint:scripts": "tslint --fix --project tsconfig.webpack.json",
+        "lint:md": "ts-node --project ./tsconfig.webpack.json --files ./scripts/lint-md.ts",
+        "start": "cross-env TS_NODE_PROJECT=tsconfig.webpack.json webpack serve --mode development --config webpack.ts",
+        "postinstall": "husky install",
+        "release": "standard-version"
+    },
+    "files": [
+        "dist"
+    ],
+    "devDependencies": {
+        "@commitlint/cli": "^12.1.4",
+        "@commitlint/config-conventional": "^12.1.4",
+        "@types/skmeans": "^0.11.2",
+        "cross-env": "^7.0.3",
+        "file-loader": "^6.2.0",
+        "html-webpack-plugin": "^5.3.2",
+        "husky": "^7.0.1",
+        "rimraf": "^3.0.2",
+        "rollup": "^2.53.3",
+        "standard-version": "^9.3.1",
+        "ts-loader": "^9.2.3",
+        "ts-node": "^10.1.0",
+        "tslint": "^6.1.3",
+        "typescript": "^4.3.5",
+        "webpack": "^5.46.0",
+        "webpack-cli": "^4.7.2",
+        "webpack-dev-server": "^3.11.2"
+    },
+    "dependencies": {
+        "skmeans": "^0.11.3",
+        "tinyqueue": "^2.0.3"
+    }
+}

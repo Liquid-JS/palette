@@ -1,0 +1,7 @@
+node_modules
+dist
+site/data/webpack.json
+package-lock.json
+*.log
+site/resources/_gen
+site/layouts/_default/baseof.html
