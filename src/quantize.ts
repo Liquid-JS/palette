@@ -1,5 +1,5 @@
 import TinyQueue from 'tinyqueue'
-import { ColorTupple, rgb2lab } from './utils/color'
+import { ColorTupple, rgb2hsl, rgb2lab } from './utils/color'
 import { baseLength, createCanvas } from './utils/image'
 import { Box, entropy } from './utils/operations'
 import { lanczosResize } from './utils/resize'
@@ -7,10 +7,11 @@ import { lanczosResize } from './utils/resize'
 const MAX_PX = 128 * 128
 const MAX_BX = 32
 
-export class Entry {
+class Entry {
     readonly entropy: number
     readonly weight: number
     readonly size: number[]
+    readonly mean: ColorTupple
 
     constructor(readonly data: Box) {
         const dmin = new Array<number>()
@@ -25,11 +26,18 @@ export class Entry {
         const r = entropy(data)
         this.weight = r.weight
         this.entropy = r.entropy
+        this.mean = r.mean
     }
 }
 
+export interface QuantizeResult {
+    weight: number
+    entropy: number
+    rgb: ColorTupple
+    hsl: ColorTupple
+}
+
 export function quantize(img: CanvasImageSource) {
-    const start = new Date().getTime()
     const swidth = baseLength(img.width)
     const sheight = baseLength(img.height)
 
@@ -64,8 +72,12 @@ export function quantize(img: CanvasImageSource) {
     const map: { [key: string]: number } = {}
     for (let i = 0; i < data.width * data.height; i++) {
         const rgb = Array.from(data.data.slice(i * 4, i * 4 + 3)) as ColorTupple
-        const c = rgb2lab(rgb)
-        if (c[0] < 5 || c[0] > 95)
+        const lab = rgb2lab(rgb)
+        if (
+            lab[0] > 95 // white
+            || lab[0] < 5 // black
+            || (lab[1] * lab[1] + lab[2] * lab[2]) < 25 // gray
+        )
             continue
 
         const key = rgb.map(p => Math.round(p * 100)).join('*')
@@ -86,7 +98,7 @@ export function quantize(img: CanvasImageSource) {
     let el: Entry | undefined
     const boxes = []
     while (el = queue.pop()) {
-        if (boxes.length + 1 + queue.length >= MAX_BX) {
+        if (boxes.length + 1 + queue.length >= MAX_BX || el.entropy < 10) {
             boxes.push(el)
             continue
         }
@@ -129,8 +141,13 @@ export function quantize(img: CanvasImageSource) {
     }
 
     boxes.sort((a, b) => b.weight - a.weight)
+    const weight = boxes.reduce((t, v) => t + v.weight, 0)
 
-    console.log(boxes)
-    console.log(`Took ${(new Date().getTime() - start) / 1000}s`)
-    return boxes
+    return boxes.map(b => ({
+        entropy: b.entropy,
+        weight: b.weight / weight,
+        rgb: b.mean,
+        hsl: rgb2hsl(b.mean),
+        lab: rgb2lab(b.mean)
+    } as QuantizeResult))
 }

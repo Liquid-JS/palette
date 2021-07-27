@@ -14,7 +14,7 @@
         "build": "rimraf dist && rollup --config rollup.config.ts --configPlugin typescript",
         "postinstall": "husky install",
         "prepublishOnly": "yarn build",
-        "release": "standard-version"
+        "release": "standard-version && git push --follow-tags origin master && npm publish"
     },
     "files": [
         "dist"

@@ -1,22 +1,37 @@
 import { quantize } from '../src'
 import { rgb2str } from '../src/utils/color'
-import { mean } from '../src/utils/operations'
 import samplePath from './logos.png'
 
 const img = new Image()
 img.addEventListener('load', () => {
-    document.body.appendChild(img)
+    const start = new Date().getTime()
     const colors = quantize(img)
-        .map(b => mean(b.data).m)
-        // .map((m) => lab2rgb(m))
+    console.log(`Took ${(new Date().getTime() - start) / 1000}s`)
+    console.log(colors)
+
+    img.style.maxWidth = '32em'
+    img.style.height = 'auto'
+    img.style.boxShadow = '0 0 1em rgba(0, 0, 0, 0.5)'
+    img.style.margin = '0.5em'
+    img.style.display = 'block'
+    document.body.appendChild(img)
+
+    const container = document.createElement('div')
+    container.style.boxShadow = '0 0 1em rgba(0, 0, 0, 0.5)'
+    container.style.margin = '0.5em'
+    container.style.display = 'inline-flex'
+    document.body.appendChild(container)
+
+    colors
+        .map(b => b.rgb)
         .map(rgb2str)
-    colors.forEach(c => {
-        const div = document.createElement('div')
-        div.style.width = '15px'
-        div.style.height = '15px'
-        div.style.display = 'inline-block'
-        div.style.background = c
-        document.body.appendChild(div)
-    })
+        .forEach(c => {
+            const div = document.createElement('div')
+            div.style.width = '1em'
+            div.style.height = '1em'
+            div.style.display = 'inline-block'
+            div.style.background = c
+            container.appendChild(div)
+        })
 })
 img.src = samplePath
