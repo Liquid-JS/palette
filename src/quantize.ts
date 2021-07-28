@@ -31,10 +31,11 @@ class Entry {
 }
 
 export interface QuantizeResult {
-    weight: number
-    entropy: number
-    rgb: ColorTupple
-    hsl: ColorTupple
+    qWeight: number
+    qEntropy: number
+    qRgb: ColorTupple
+    qHsl: ColorTupple
+    qLab: ColorTupple
 }
 
 export function quantize(img: CanvasImageSource) {
@@ -141,13 +142,13 @@ export function quantize(img: CanvasImageSource) {
     }
 
     boxes.sort((a, b) => b.weight - a.weight)
-    const weight = boxes.reduce((t, v) => t + v.weight, 0)
+    const wSum = boxes.reduce((t, v) => t + v.weight, 0)
 
     return boxes.map(b => ({
-        entropy: b.entropy,
-        weight: b.weight / weight,
-        rgb: b.mean,
-        hsl: rgb2hsl(b.mean),
-        lab: rgb2lab(b.mean)
+        qEntropy: b.entropy,
+        qWeight: b.weight / wSum,
+        qRgb: b.mean,
+        qHsl: rgb2hsl(b.mean),
+        qLab: rgb2lab(b.mean)
     } as QuantizeResult))
 }

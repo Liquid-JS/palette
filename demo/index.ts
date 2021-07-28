@@ -23,7 +23,7 @@ img.addEventListener('load', () => {
     document.body.appendChild(container)
 
     colors
-        .map(b => b.rgb)
+        .map(b => b.qRgb)
         .map(rgb2str)
         .forEach(c => {
             const div = document.createElement('div')
