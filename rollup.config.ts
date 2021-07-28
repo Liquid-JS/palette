@@ -41,7 +41,9 @@ export default {
                 'src/**/*.ts'
             ],
             declaration: true,
-            declarationDir: './dist'
+            declarationDir: './dist',
+            sourceMap: true,
+            inlineSources: true
         }),
         commonjs(),
         nodeResolve(),
