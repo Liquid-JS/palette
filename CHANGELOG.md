@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/Liquid-JS/palette/compare/v0.0.4...v0.0.5) (2021-07-28)
+
+
+### Bug Fixes
+
+* build externs ([8f5a191](https://github.com/Liquid-JS/palette/commit/8f5a191046d2bf63faf705ca3fe31f06f19aac44))
+
 ### [0.0.4](https://github.com/Liquid-JS/palette/compare/v0.0.3...v0.0.4) (2021-07-28)
 
 ### [0.0.3](https://github.com/Liquid-JS/palette/compare/v0.0.2...v0.0.3) (2021-07-27)
