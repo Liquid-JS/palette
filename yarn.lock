@@ -341,11 +341,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/skmeans@^0.11.2":
-  version "0.11.2"
-  resolved "https://registry.yarnpkg.com/@types/skmeans/-/skmeans-0.11.2.tgz#33b74ff650a166ea86ae4644d8ce16c50a93e603"
-  integrity sha512-VFOatc1ITAAaYjslFTow+2qJckJROAa5eUvivcTZ4wnSLELFCVt3ezwC0ENl21A0SfqclhKeK4unthZ3uTBCCg==
-
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.11.1.tgz#2bfd767eae1a6996f432ff7e8d7fc75679c0b6a7"

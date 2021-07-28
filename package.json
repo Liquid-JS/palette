@@ -12,7 +12,7 @@
         "lint:md": "ts-node --project ./tsconfig.webpack.json --files ./scripts/lint-md.ts",
         "start": "cross-env TS_NODE_PROJECT=tsconfig.webpack.json webpack serve --mode development --config webpack.ts",
         "build": "rimraf dist && rollup --config rollup.config.ts --configPlugin typescript",
-        "postinstall": "husky install",
+        "prepare": "husky install",
         "prepublishOnly": "yarn build",
         "release": "standard-version && git push --follow-tags origin master && npm publish"
     },
@@ -27,7 +27,6 @@
         "@rollup/plugin-node-resolve": "^13.0.2",
         "@rollup/plugin-typescript": "^8.2.3",
         "@types/google-closure-compiler": "^0.0.19",
-        "@types/skmeans": "^0.11.2",
         "cross-env": "^7.0.3",
         "file-loader": "^6.2.0",
         "html-webpack-plugin": "^5.3.2",
