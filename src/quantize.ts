@@ -2,7 +2,7 @@ import TinyQueue from 'tinyqueue'
 import { ColorTupple, rgb2hsl, rgb2lab } from './utils/color'
 import { baseLength, createCanvas } from './utils/image'
 import { Box, entropy } from './utils/operations'
-import { lanczosResize } from './utils/resize'
+import { ImageDataTuple, lanczosResize } from './utils/resize'
 
 const MAX_PX = 128 * 128
 const MAX_BX = 32
@@ -38,41 +38,46 @@ export interface QuantizeResult {
     qLab: ColorTupple
 }
 
-export function quantize(img: CanvasImageSource) {
+export function fetchImageData(img: CanvasImageSource) {
     const swidth = baseLength(img.width)
     const sheight = baseLength(img.height)
 
-    let width = swidth
-    let height = sheight
+    const width = swidth
+    const height = sheight
 
     let canvas: HTMLCanvasElement
 
-    if (swidth * sheight > MAX_PX) {
-        const ratio = Math.sqrt(swidth * sheight / MAX_PX)
-        width = Math.round(swidth / ratio)
-        height = Math.round(sheight / ratio)
+    if (img instanceof HTMLCanvasElement)
+        canvas = img
+    else {
         canvas = createCanvas(width, height)
-        lanczosResize(img, { canvas })
-    } else {
-        if (img instanceof HTMLCanvasElement)
-            canvas = img
-        else {
-            canvas = createCanvas(width, height)
-            const tctx = canvas.getContext('2d')
-            if (!tctx)
-                throw new Error('Unable to obtain canvas context')
-            tctx.drawImage(img, 0, 0)
-        }
+        const tctx = canvas.getContext('2d')
+        if (!tctx)
+            throw new Error('Unable to obtain canvas context')
+        tctx.drawImage(img, 0, 0)
     }
 
     const ctx = canvas.getContext('2d')
     if (!ctx)
         throw new Error('Unable to obtain canvas context')
     const data = ctx.getImageData(0, 0, width, height)
+    return [width, height, data.data] as ImageDataTuple
+}
+
+export function quantize([swidth, sheight, data]: ImageDataTuple) {
+    let width = swidth
+    let height = sheight
+
+    if (swidth * sheight > MAX_PX) {
+        const ratio = Math.sqrt(swidth * sheight / MAX_PX)
+        width = Math.round(swidth / ratio)
+        height = Math.round(sheight / ratio)
+        data = lanczosResize([swidth, sheight, data], { width, height })[2]
+    }
 
     const map: { [key: string]: number } = {}
-    for (let i = 0; i < data.width * data.height; i++) {
-        const rgb = Array.from(data.data.slice(i * 4, i * 4 + 3)) as ColorTupple
+    for (let i = 0; i < width * height; i++) {
+        const rgb = Array.from(data.slice(i * 4, i * 4 + 3)) as ColorTupple
         const lab = rgb2lab(rgb)
         if (
             lab[0] > 95 // white
@@ -85,7 +90,7 @@ export function quantize(img: CanvasImageSource) {
         if (!(key in map))
             map[key] = 0
 
-        map[key] += data.data[i * 4 + 3] / 255
+        map[key] += data[i * 4 + 3] / 255
     }
 
     const box: Box = Object.entries(map).map(([k, w]) => ({

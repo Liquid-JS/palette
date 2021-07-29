@@ -28,8 +28,6 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { baseLength, createCanvas } from './image'
-
 export type Kernel = (size: number, x: number) => number
 
 export enum KernelType {
@@ -64,40 +62,20 @@ function createCache(kernel: Kernel, cachePrecision: number, filterSize: number)
     return cache
 }
 
-export function lanczosResize(img: CanvasImageSource, opt: {
-    width: number,
-    height: number
-} | {
-    canvas: HTMLCanvasElement
-}, kernel = Kernels[KernelType.Lanczos]) {
-    const cwidth = baseLength(img.width)
-    const cheight = baseLength(img.height)
-    let canvas = img instanceof HTMLCanvasElement
-        ? img
-        : createCanvas(cwidth, cheight)
-    let ctx = canvas.getContext('2d')
-    if (!ctx)
-        throw new Error('Unable to obtain canvas context')
-    if (canvas != img)
-        ctx.drawImage(img, 0, 0)
+export type ImageDataTuple = [number, number, Uint8ClampedArray]
 
-    const { width, height } = 'canvas' in opt
-        ? opt.canvas
-        : opt
+export function lanczosResize([swidth, sheight, sdata]: ImageDataTuple, opt: { width: number, height: number }, kernel = Kernels[KernelType.Lanczos]) {
+    const { width, height } = opt
 
-    const src = ctx.getImageData(0, 0, cwidth, cheight)
-    let dst = ctx.createImageData(width, height)
+    let ddata = new Uint8ClampedArray(width * height * 4)
 
     // No need to resize
-    if (src.data.length == dst.data.length) {
-        dst = src
+    if (swidth == width && sheight == height) {
+        ddata = sdata
     } else {
-        const sdata = src.data
-        const ddata = dst.data
-
         const values = []
-        const sX = width / cwidth
-        const sY = height / cheight
+        const sX = width / swidth
+        const sY = height / sheight
 
         let filterSize = 3
         if (sX > 0.01 && sY > 0.01 && sX < 1 && sY < 1) {
@@ -109,8 +87,8 @@ export function lanczosResize(img: CanvasImageSource, opt: {
                 filterSize = 3
             }
         }
-        const sw1 = cwidth - 1
-        const sh1 = cheight - 1
+        const sw1 = swidth - 1
+        const sh1 = sheight - 1
         const isx = 1.0 / sX
         const isy = 1.0 / sX
         const cw = 1.0 / width
@@ -157,7 +135,7 @@ export function lanczosResize(img: CanvasImageSource, opt: {
                 let g = 0
                 let b = 0
                 for (let y1 = y1b >> 0; y1 <= y1e; y1++) {
-                    const y2 = y1 * cwidth
+                    const y2 = y1 * swidth
                     for (let x1 = x1b >> 0; x1 <= x1e; x1++) {
                         const value = values[i++] * total
                         const idxi = ((y2 + x1) >> 0) * 4
@@ -176,12 +154,5 @@ export function lanczosResize(img: CanvasImageSource, opt: {
         }
     }
 
-    canvas = 'canvas' in opt
-        ? opt.canvas
-        : createCanvas(dst.width, dst.height)
-    ctx = canvas.getContext('2d')
-    if (!ctx)
-        throw new Error('Unable to obtain canvas context')
-    ctx.putImageData(dst, 0, 0)
-    return canvas
+    return [width, height, ddata] as ImageDataTuple
 }

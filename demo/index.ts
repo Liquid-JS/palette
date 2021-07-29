@@ -1,11 +1,12 @@
-import { quantize } from '../src'
+import { fetchImageData, quantize } from '../src'
 import { rgb2str } from '../src/utils/color'
 import samplePath from './logos.png'
 
 const img = new Image()
 img.addEventListener('load', () => {
     const start = new Date().getTime()
-    const colors = quantize(img)
+    const imageData = fetchImageData(img)
+    const colors = quantize(imageData)
     console.log(`Took ${(new Date().getTime() - start) / 1000}s`)
     console.log(colors)
 
