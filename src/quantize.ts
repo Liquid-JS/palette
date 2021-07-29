@@ -45,21 +45,17 @@ export function fetchImageData(img: CanvasImageSource) {
     const width = swidth
     const height = sheight
 
-    let canvas: HTMLCanvasElement
-
-    if (img instanceof HTMLCanvasElement)
-        canvas = img
-    else {
-        canvas = createCanvas(width, height)
-        const tctx = canvas.getContext('2d')
-        if (!tctx)
-            throw new Error('Unable to obtain canvas context')
-        tctx.drawImage(img, 0, 0)
-    }
+    const canvas = img instanceof HTMLCanvasElement
+        ? img
+        : createCanvas(width, height)
 
     const ctx = canvas.getContext('2d')
     if (!ctx)
         throw new Error('Unable to obtain canvas context')
+
+    if (canvas !== img)
+        ctx.drawImage(img, 0, 0)
+
     const data = ctx.getImageData(0, 0, width, height)
     return [width, height, data.data] as ImageDataTuple
 }
