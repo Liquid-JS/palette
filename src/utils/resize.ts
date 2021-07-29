@@ -28,6 +28,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { ImageDataTuple } from './image'
+
 export type Kernel = (size: number, x: number) => number
 
 export enum KernelType {
@@ -61,8 +63,6 @@ function createCache(kernel: Kernel, cachePrecision: number, filterSize: number)
     }
     return cache
 }
-
-export type ImageDataTuple = [number, number, Uint8ClampedArray]
 
 export function lanczosResize([swidth, sheight, sdata]: ImageDataTuple, opt: { width: number, height: number }, kernel = Kernels[KernelType.Lanczos]) {
     const { width, height } = opt

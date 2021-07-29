@@ -1,8 +1,8 @@
 import TinyQueue from 'tinyqueue'
 import { ColorTupple, rgb2hsl, rgb2lab } from './utils/color'
-import { baseLength, createCanvas } from './utils/image'
+import { ImageDataTuple } from './utils/image'
 import { Box, entropy } from './utils/operations'
-import { ImageDataTuple, lanczosResize } from './utils/resize'
+import { lanczosResize } from './utils/resize'
 
 const MAX_PX = 128 * 128
 const MAX_BX = 32
@@ -36,28 +36,6 @@ export interface QuantizeResult {
     qRgb: ColorTupple
     qHsl: ColorTupple
     qLab: ColorTupple
-}
-
-export function fetchImageData(img: CanvasImageSource) {
-    const swidth = baseLength(img.width)
-    const sheight = baseLength(img.height)
-
-    const width = swidth
-    const height = sheight
-
-    const canvas = img instanceof HTMLCanvasElement
-        ? img
-        : createCanvas(width, height)
-
-    const ctx = canvas.getContext('2d')
-    if (!ctx)
-        throw new Error('Unable to obtain canvas context')
-
-    if (canvas !== img)
-        ctx.drawImage(img, 0, 0)
-
-    const data = ctx.getImageData(0, 0, width, height)
-    return [width, height, data.data] as ImageDataTuple
 }
 
 export function quantize([swidth, sheight, data]: ImageDataTuple) {

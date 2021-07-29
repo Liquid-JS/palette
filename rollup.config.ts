@@ -1,6 +1,4 @@
 import compiler from '@ampproject/rollup-plugin-closure-compiler'
-import commonjs from '@rollup/plugin-commonjs'
-import { nodeResolve } from '@rollup/plugin-node-resolve'
 import typescript from '@rollup/plugin-typescript'
 import { randomUUID } from 'crypto'
 import { writeFileSync } from 'fs'
@@ -45,8 +43,6 @@ export default {
             sourceMap: true,
             inlineSources: true
         }),
-        commonjs(),
-        nodeResolve(),
         terser({ format: { comments: 'all' } }),
         compiler({
             language_in: 'ECMASCRIPT_2018',
