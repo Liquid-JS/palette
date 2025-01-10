@@ -16,10 +16,10 @@ Get colour palette from an image.
 
 ## Usage
 
-To configure that only workspace-packages are accepted scopes:
+To obtain colours from an image, use `extractImageData` and `quantize` (note: `quantize` might take a long time to run depending on image size; consider running it asynchronously).
 
 ```ts
-import { extractImageData, quantize } from '../index'
+import { extractImageData, quantize } from '@liquid-js/palette'
 
 const imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Peace_Of_Nature_%28129019177%29.jpeg/640px-Peace_Of_Nature_%28129019177%29.jpeg'
 
@@ -33,90 +33,6 @@ img.addEventListener('load', () => {
 })
 img.src = imageUrl
 ```
-
-To configure that workspace-packages and `codeowners` are accepted scopes:
-
-```json
-{
-    "plugins": [
-        "@liquid-js/palette"
-    ],
-    "rules": {
-        "scope-enum": [
-            2,
-            "always",
-            {
-                "extra": [
-                    "codeowners"
-                ]
-            }
-        ]
-    }
-}
-```
-
-To strip namespace prefix from workspace packages:
-
-```json
-{
-    "plugins": [
-        "@liquid-js/palette"
-    ],
-    "rules": {
-        "scope-enum": [
-            2,
-            "always",
-            {
-                "stripPrefix": [
-                    "@my-org/"
-                ]
-            }
-        ]
-    }
-}
-```
-
-## Examples
-
-    $ cat .commitlintrc.json
-
-    {
-        "extends": [
-            "@commitlint/config-conventional"
-        ],
-        "plugins": [
-            "@liquid-js/palette"
-        ],
-        "rules": {
-            "scope-enum": [
-                2,
-                "always",
-                [
-                    "codeowners"
-                ]
-            ]
-        }
-    }
-
-    $ tree packages
-
-    packages
-    ├── api
-    ├── app
-    └── web
-
-    $ echo "feat(api): this will succeed" | npx commitlint --verbose
-    ⧗   input: feat(api): this will succeed
-    ✔   found 0 problems, 0 warnings
-
-    $ echo "feat(codeowners): this will succeed" | npx commitlint --verbose
-    ⧗   input: feat(codeowners): this will succeed
-    ✔   found 0 problems, 0 warnings
-
-    $ echo "feat(foo): this will fail" | npx commitlint --verbose
-    ⧗   input: feat(foo): this will fail
-    ✖   scope must be one of [api, app, web] [scope-enum]
-    ✖   found 1 problems, 0 warnings
 
 ## License
 
