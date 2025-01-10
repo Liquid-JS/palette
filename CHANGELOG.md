@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.2](https://github.com/Liquid-JS/palette/compare/v0.1.1...v0.1.2) (2025-01-10)
+
+
+### Bug Fixes
+
+* licence ([25d3573](https://github.com/Liquid-JS/palette/commit/25d357353b26f5149b50d01f932011d9047a6a60))
+
 ## [0.1.1](https://github.com/Liquid-JS/palette/compare/v0.1.0...v0.1.1) (2025-01-10)
 
 ## [0.1.0](https://github.com/Liquid-JS/palette/compare/v0.0.9...v0.1.0) (2025-01-10)
