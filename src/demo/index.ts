@@ -1,8 +1,9 @@
-import { extractImageData, quantize } from '../src'
-import { rgb2str } from '../src/utils/color'
+import { extractImageData, quantize } from '../index'
+import { rgb2str } from '../utils/color'
 import samplePath from './logos.png'
 
 const img = new Image()
+img.crossOrigin = 'anonymous'
 img.addEventListener('load', () => {
     const start = new Date().getTime()
     const imageData = extractImageData(img)

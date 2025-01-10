@@ -5,25 +5,31 @@
     "editor.formatOnSave": true,
     "editor.wordWrap": "on",
     "editor.codeActionsOnSave": {
-        "source.fixAll": true
+        "source.fixAll": "explicit"
     },
+    "files.autoSave": "off",
     "html.format.wrapAttributes": "force",
     "html.format.wrapLineLength": 0,
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": false,
-    "typescript.tsdk": "node_modules\\typescript\\lib",
+    "typescript.tsdk": "node_modules/typescript/lib",
     "files.exclude": {
         "**/.git": true,
         "**/.svn": true,
         "**/.hg": true,
         "**/CVS": true,
-        "**/.DS_Store": true,
-        // "dist": true
+        "**/.DS_Store": true
     },
     "[yaml]": {
         "editor.tabSize": 2
     },
     "[toml]": {
         "editor.tabSize": 2
-    }
+    },
+    "stylelint.validate": [
+        "css",
+        "less",
+        "postcss",
+        "scss"
+    ]
 }

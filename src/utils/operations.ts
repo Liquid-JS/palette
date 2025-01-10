@@ -11,9 +11,7 @@ export function entropy(box: Box) {
             mean: [0, 0, 0] as ColorTupple
         }
     const w2 = box.reduce((t, v) => t + v.w * v.w, 0)
-    const err = box.reduce((t, v) => {
-        return t + euc2(m, v.rgb) * v.w * v.w
-    }, 0) / w2
+    const err = box.reduce((t, v) => t + euc2(m, v.rgb) * v.w * v.w, 0) / w2
     return {
         entropy: err,
         weight: w,

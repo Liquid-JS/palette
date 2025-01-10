@@ -21,7 +21,7 @@ export type ImageDataTuple = [number, number, Uint8ClampedArray]
  * @param img Image source
  * @returns Tuple containing image width, height, and pixel data
  */
-export function extractImageData(img: CanvasImageSource) {
+export function extractImageData(img: Exclude<CanvasImageSource, VideoFrame>) {
     const swidth = baseLength(img.width)
     const sheight = baseLength(img.height)
 

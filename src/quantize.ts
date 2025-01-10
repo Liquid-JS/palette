@@ -77,6 +77,7 @@ export function quantize([swidth, sheight, data]: ImageDataTuple) {
 
     let el: Entry | undefined
     const boxes = []
+    // eslint-disable-next-line no-cond-assign
     while (el = queue.pop()) {
         if (boxes.length + 1 + queue.length >= MAX_BX || el.entropy < 10) {
             boxes.push(el)

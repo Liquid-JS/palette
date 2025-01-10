@@ -1,10 +1,10 @@
 export type ColorTupple = [number, number, number]
 
 export function lab2rgb(lab: ColorTupple): ColorTupple {
-    let y = (lab[0] + 16) / 116,
-        x = lab[1] / 500 + y,
-        z = y - lab[2] / 200,
-        r, g, b
+    let y = (lab[0] + 16) / 116
+    let x = lab[1] / 500 + y
+    let z = y - lab[2] / 200
+    let r; let g; let b
 
     x = 0.95047 * ((x * x * x > 0.008856) ? x * x * x : (x - 16 / 116) / 7.787)
     y = 1.00000 * ((y * y * y > 0.008856) ? y * y * y : (y - 16 / 116) / 7.787)
@@ -18,16 +18,18 @@ export function lab2rgb(lab: ColorTupple): ColorTupple {
     g = (g > 0.0031308) ? (1.055 * Math.pow(g, 1 / 2.4) - 0.055) : 12.92 * g
     b = (b > 0.0031308) ? (1.055 * Math.pow(b, 1 / 2.4) - 0.055) : 12.92 * b
 
-    return [Math.max(0, Math.min(1, r)) * 255,
-    Math.max(0, Math.min(1, g)) * 255,
-    Math.max(0, Math.min(1, b)) * 255]
+    return [
+        Math.max(0, Math.min(1, r)) * 255,
+        Math.max(0, Math.min(1, g)) * 255,
+        Math.max(0, Math.min(1, b)) * 255
+    ]
 }
 
 export function rgb2lab(rgb: ColorTupple): ColorTupple {
-    let r = rgb[0] / 255,
-        g = rgb[1] / 255,
-        b = rgb[2] / 255,
-        x, y, z
+    let r = rgb[0] / 255
+    let g = rgb[1] / 255
+    let b = rgb[2] / 255
+    let x; let y; let z
 
     r = (r > 0.04045) ? Math.pow((r + 0.055) / 1.055, 2.4) : r / 12.92
     g = (g > 0.04045) ? Math.pow((g + 0.055) / 1.055, 2.4) : g / 12.92
@@ -46,9 +48,11 @@ export function rgb2lab(rgb: ColorTupple): ColorTupple {
 
 export function rgb2hsl(rgb: ColorTupple): ColorTupple {
     let [r, g, b] = rgb
-    r /= 255, g /= 255, b /= 255
+    r /= 255
+    g /= 255
+    b /= 255
 
-    const max = Math.max(r, g, b), min = Math.min(r, g, b)
+    const max = Math.max(r, g, b); const min = Math.min(r, g, b)
     let h: number
     let s: number
     const l = (max + min) / 2
