@@ -1,6 +1,13 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
+
+## [0.1.0](https://github.com/Liquid-JS/palette/compare/v0.0.9...v0.1.0) (2025-01-10)
+
+
+### Features
+
+* typescript ([eebf4d4](https://github.com/Liquid-JS/palette/commit/eebf4d422f9fcd40545cf0122d85ffbd48252b6b))
 
 ### [0.0.9](https://github.com/Liquid-JS/palette/compare/v0.0.8...v0.0.9) (2021-07-29)
 
