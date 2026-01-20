@@ -640,7 +640,7 @@ __metadata:
   dependencies:
     "@commitlint/cli": "npm:^20.3.1"
     "@commitlint/config-conventional": "npm:^20.3.1"
-    "@liquid-js/rollup-plugin-closure-compiler": "npm:^0.28.0"
+    "@liquid-js/rollup-plugin-closure-compiler": "npm:^0.28.1"
     "@rollup/plugin-terser": "npm:^0.4.4"
     "@rollup/plugin-typescript": "npm:^12.3.0"
     "@stylistic/eslint-plugin": "npm:^5.7.0"
@@ -665,19 +665,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@liquid-js/rollup-plugin-closure-compiler@npm:^0.28.0":
-  version: 0.28.0
-  resolution: "@liquid-js/rollup-plugin-closure-compiler@npm:0.28.0"
+"@liquid-js/rollup-plugin-closure-compiler@npm:^0.28.1":
+  version: 0.28.1
+  resolution: "@liquid-js/rollup-plugin-closure-compiler@npm:0.28.1"
   dependencies:
     "@ampproject/remapping": "npm:^2.3.0"
     acorn: "npm:^8.15.0"
     acorn-walk: "npm:^8.3.4"
     estree-walker: "npm:^3.0.3"
-    magic-string: "npm:^0.30.18"
+    magic-string: "npm:^0.30.21"
   peerDependencies:
     google-closure-compiler: ^20250820.0.0
     rollup: ">=4.50"
-  checksum: 10/8c55891a59d8636aa3ff117b2c732b0cd031aa564d9f902e3abfda80df6e5f90aab8198b6aca94f8f5dfbc3c9cd4ccbd98a44d9aceb50b8591686e4d105f67b9
+  checksum: 10/19976858eb4c5a4c464bb99ba07144cfb24879961e828d5f4a5d9a4f711d30884fb9a9c299acafea914a954d05d90257fcc893d8c841eff56c28147d26859731
   languageName: node
   linkType: hard
 
@@ -4031,7 +4031,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"magic-string@npm:^0.30.18":
+"magic-string@npm:^0.30.21":
   version: 0.30.21
   resolution: "magic-string@npm:0.30.21"
   dependencies:
