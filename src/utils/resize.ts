@@ -40,13 +40,13 @@ export enum KernelType {
 const CACHE_PRECISION = 1000
 
 export const Kernels: { [P in KernelType]: Kernel } = {
-    [KernelType.Lanczos](size, x) {
+    [KernelType.Lanczos]: (size, x) => {
         if (x >= size || x <= -size) return 0
         if (x === 0) return 1
         const xpi = x * Math.PI
         return size * Math.sin(xpi) * Math.sin(xpi / size) / (xpi * xpi)
     },
-    [KernelType.Linear](size, x) {
+    [KernelType.Linear]: (size, x) => {
         x = Math.abs(x)
         if (x <= 1) return (1 - x) * size
         return 0
@@ -67,7 +67,7 @@ function createCache(kernel: Kernel, cachePrecision: number, filterSize: number)
 export function lanczosResize([swidth, sheight, sdata]: ImageDataTuple, opt: { width: number, height: number }, kernel = Kernels[KernelType.Lanczos]) {
     const { width, height } = opt
 
-    let ddata = new Uint8ClampedArray(width * height * 4)
+    let ddata: Uint8ClampedArray<ArrayBufferLike> = new Uint8ClampedArray(width * height * 4)
 
     // No need to resize
     if (swidth == width && sheight == height) {
